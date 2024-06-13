@@ -99,3 +99,16 @@ const finishTimer = () => {
   }
 }
 </script>
+<style scoped>
+.v-container {
+  background-color: #D0D0D0;
+}
+
+.v-btn {
+  color: #FCFCFC;
+}
+
+h1, h2 {
+  color: #2894FF;
+}
+</style>

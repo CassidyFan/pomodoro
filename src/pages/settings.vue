@@ -52,3 +52,12 @@ const { alarms, selectedAlarm } = storeToRefs(settings)
   display: none;
 }
 </style>
+<style scoped>
+.v-container {
+  background-color: #D0D0D0;
+}
+
+h1, h2 {
+  color: #2894FF;
+}
+</style>

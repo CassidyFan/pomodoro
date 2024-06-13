@@ -28,3 +28,16 @@
 <script setup>
 //
 </script>
+<style scoped>
+.v-container {
+  background-color: #D0D0D0;
+}
+
+.v-app-bar-title {
+  color: #2894FF;
+}
+
+.v-btn {
+  color: #2894FF;
+}
+</style>

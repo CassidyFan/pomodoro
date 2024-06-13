@@ -118,3 +118,16 @@ const onEditInputSubmit = async (id, i) => {
   confirmEditItem(id)
 }
 </script>
+<style scoped>
+.v-container {
+  background-color: #D0D0D0;
+}
+
+.v-text-field {
+  color: #D3A4FF;
+}
+
+h1, h2 {
+  color: #2894FF;
+}
+</style>
