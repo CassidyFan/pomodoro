@@ -98,20 +98,3 @@ const finishTimer = () => {
     startTimer()
   }
 }
-
-const currentText = computed(() => {
-  if (currentItem.value.length > 0) {
-    return currentItem.value
-  } else if (items.value.length > 0) {
-    return '點擊開始'
-  } else {
-    return '沒有事項'
-  }
-})
-
-const currentTime = computed(() => {
-  const m = Math.floor(timeleft.value / 60).toString().padStart(2, '0')
-  const s = (timeleft.value % 60).toString().padStart(2, '0')
-  return m + ':' + s
-})
-</script>

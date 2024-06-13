@@ -89,7 +89,7 @@ definePage({
 
 const list = useListStore()
 const { addItem, editItem, delItem, cancelEditItem, confirmEditItem, delFinishItem } = list
-const { items } = storeToRefs(list)
+const { items, finishedItems } = storeToRefs(list)
 
 const newItem = ref('')
 const newItemTextField = ref(null)

@@ -25,7 +25,7 @@ export const useListStore = defineStore('list', {
       return this.items.findIndex(item => item.id === id)
     },
     editItem (id) {
-      const i = this.items.findIndexById(id)
+      const i = this.findIndexById(id)
       this.items[i].edit = true
     },
     delItem (id) {
