@@ -98,3 +98,4 @@ const finishTimer = () => {
     startTimer()
   }
 }
+</script>
