@@ -1,32 +1,36 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <h1 class="text-center">鈴聲設定</h1>
-      </v-col>
-      <v-col cols="12">
-        <v-table>
-          <thead>
-            <tr>
-              <th>名稱</th>
-              <th>試聽</th>
-              <th>選擇</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="alarm in alarms" :key="alarm.id">
-              <td>{{ alarm.name }}</td>
+  <v-container class="background">
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <v-card class="pa-4">
+          <h1 class="text-center">Ringtone Settings</h1>
+          <v-data-table :items="alarms" class="elevation-1 mt-4">
+            <template v-slot:top>
+              <thead>
+                <tr>
+                  <th class="text-left">Name</th>
+                  <th class="text-left">Audition</th>
+                  <th class="text-left">Select</th>
+                </tr>
+              </thead>
+            </template>
+            <template v-slot:item.name="{ item }">
+              <td>{{ item.name }}</td>
+            </template>
+            <template v-slot:item.audition="{ item }">
               <td>
-                <audio :src="alarm.file" controls></audio>
+                <audio :src="item.file" controls></audio>
               </td>
+            </template>
+            <template v-slot:item.select="{ item }">
               <td>
                 <v-radio-group v-model="selectedAlarm">
-                  <v-radio :value="alarm.id"></v-radio>
+                  <v-radio :value="item.id"></v-radio>
                 </v-radio-group>
               </td>
-            </tr>
-          </tbody>
-        </v-table>
+            </template>
+          </v-data-table>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -47,17 +51,29 @@ const settings = useSettingsStore()
 const { alarms, selectedAlarm } = storeToRefs(settings)
 </script>
 
-<style scoped lang="scss">
-:deep(.v-input__details) {
-  display: none;
-}
-</style>
 <style scoped>
-.v-container {
-  background-color: #D0D0D0;
+.background {
+  background: url(../assets/bgtomato2.jpg);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-h1, h2 {
-  color: #2894FF;
+.v-card {
+  background: rgba(69, 247, 238, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.elevation-1 {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+audio {
+  width: 100%;
 }
 </style>

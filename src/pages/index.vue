@@ -1,26 +1,37 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <h1>目前事項 {{ currentText }}</h1>
-        <h2>剩餘時間 {{ currentTime }}</h2>
-      </v-col>
-      <v-col cols="12">
-        <v-btn
-          icon="mdi-play"
-          @click="startTimer"
-          :disabled="status === STATUS.COUNTING || (currentItem.length === 0 && items.length === 0)"
-        ></v-btn>
-        <v-btn
-          icon="mdi-pause"
-          :disabled="status !== STATUS.COUNTING"
-          @click="pauseTimer"
-        ></v-btn>
-        <v-btn
-          icon="mdi-skip-next"
-          :disabled="currentItem.length === 0"
-          @click="finishTimer"
-        ></v-btn>
+  <v-container class="background">
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <v-card class="pa-4 text-center">
+          <h1 class="title">Current Matter: {{ currentText }}</h1>
+          <h2 class="time">Time Left: {{ currentTime }}</h2>
+          <v-row justify="center" class="mt-4">
+            <v-btn
+              color="primary"
+              @click="startTimer"
+              :disabled="status === STATUS.COUNTING || (currentItem.length === 0 && items.length === 0)"
+            >
+              <v-icon left>mdi-play</v-icon>
+              Start
+            </v-btn>
+            <v-btn
+              color="warning"
+              @click="pauseTimer"
+              :disabled="status !== STATUS.COUNTING"
+            >
+              <v-icon left>mdi-pause</v-icon>
+              Pause
+            </v-btn>
+            <v-btn
+              color="success"
+              @click="finishTimer"
+              :disabled="currentItem.length === 0"
+            >
+              <v-icon left>mdi-skip-next</v-icon>
+              Next
+            </v-btn>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -84,7 +95,7 @@ const finishTimer = () => {
   audio.play()
 
   const { show, isSupported } = useWebNotification({
-    title: '事項完成',
+    title: 'Finished',
     body: currentItem.value,
     icon: new URL('@/assets/tomato.png', import.meta.url).href
   })
@@ -98,17 +109,63 @@ const finishTimer = () => {
     startTimer()
   }
 }
+
+const currentText = computed(() => {
+  if (currentItem.value.length > 0) {
+    return currentItem.value
+  } else if (items.value.length > 0) {
+    return 'Click Start'
+  } else {
+    return 'No Matters'
+  }
+})
+
+const currentTime = computed(() => {
+  const m = Math.floor(timeleft.value / 60).toString().padStart(2, '0')
+  const s = (timeleft.value % 60).toString().padStart(2, '0')
+  return m + ':' + s
+})
 </script>
-<style scoped>
-.v-container {
-  background-color: #D0D0D0;
+
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+.background {
+  background: url(../assets/bgtomato3.jpg);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v-card {
+  background: rgba(241, 133, 10, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+.time {
+  font-size: 1.5em;
+  color: #ff5722;
 }
 
 .v-btn {
-  color: #FCFCFC;
+  margin: 0 0.5em;
 }
 
-h1, h2 {
-  color: #2894FF;
+.v-btn v-icon {
+  margin-right: 0.5em;
 }
 </style>

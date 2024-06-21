@@ -62,7 +62,7 @@ export default defineConfig({
     }),
     VitePluginRadar({
       analytics: {
-        id: 'G-P5DB1RJJ06'
+        id: 'G-EP7N8FWQZ9'
       }
     }),
     VueRouter(),

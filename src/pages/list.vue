@@ -1,75 +1,61 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <h1 class="text-center">代辦事項</h1>
+  <v-container class="background">
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <v-card class="pa-4">
+          <h1 class="text-center">To-do list</h1>
+          <v-text-field
+            variant="outlined"
+            label="New Items"
+            clearable
+            append-icon="mdi-plus"
+            @keydown.enter="onInputSubmit"
+            @click:append="onInputSubmit"
+            v-model="newItem"
+            :rules="[rules.required, rules.length]"
+            ref="newItemTextField"
+          ></v-text-field>
+          <v-data-table
+            :headers="tableHeaders"
+            :items="items"
+            item-key="id"
+          >
+            <template v-slot:item.operate="{ item }">
+              <template v-if="!item.edit">
+                <v-btn icon @click="editItem(item.id)">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn icon @click="delItem(item.id)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+              <template v-else>
+                <v-btn icon @click="onEditInputSubmit(item.id)">
+                  <v-icon>mdi-check</v-icon>
+                </v-btn>
+                <v-btn icon @click="cancelEditItem(item.id)">
+                  <v-icon>mdi-undo</v-icon>
+                </v-btn>
+              </template>
+            </template>
+          </v-data-table>
+        </v-card>
       </v-col>
-      <v-col cols="12">
-        <v-text-field
-          variant="outlined"
-          label="新增事項"
-          clearable
-          append-icon="mdi-plus"
-          @keydown.enter="onInputSubmit"
-          @click:append="onInputSubmit"
-          v-model="newItem"
-          :rules="[rules.required, rules.length]"
-          ref="newItemTextField"
-        ></v-text-field>
-        <v-table>
-          <thead>
-            <tr>
-              <th>名稱</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, i) in items" :key="item.id">
-              <td>
-                <span v-show="!item.edit">{{ item.name }}</span>
-                <v-text-field
-                  v-show="item.edit"
-                  v-model="item.model"
-                  :rules="[rules.required, rules.length]"
-                  autofocus
-                  @keydown.enter="onEditInputSubmit(item.id, i)"
-                  ref="editItemTextField"
-                ></v-text-field>
-              </td>
-              <td>
-                <template v-if="!item.edit">
-                  <v-btn icon="mdi-pencil" @click="editItem(item.id)"></v-btn>
-                  <v-btn icon="mdi-delete" @click="delItem(item.id)"></v-btn>
-                </template>
-                <template v-else>
-                  <v-btn icon="mdi-check" @click="onEditInputSubmit(item.id, i)"></v-btn>
-                  <v-btn icon="mdi-undo" @click="cancelEditItem(item.id)"></v-btn>
-                </template>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
-      </v-col>
-      <v-col cols="12">
-        <h1 class="text-center">完成事項</h1>
-      </v-col>
-      <v-col cols="12">
-        <v-table>
-          <thead>
-            <tr>
-              <th>名稱</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in finishedItems" :key="item.id">
-              <td>{{ item.name }}</td>
-              <td>
-                <v-btn icon="mdi-delete" @click="delFinishItem(item.id)"></v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+      <v-col cols="12" md="8" class="mt-5">
+        <v-card class="pa-4">
+          <h1 class="text-center">Finished</h1>
+          <v-data-table
+            :headers="finishedTableHeaders"
+            :items="finishedItems"
+            item-key="id"
+          >
+            <template v-slot:item.operate="{ item }">
+              <v-btn icon @click="delFinishItem(item.id)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -93,41 +79,60 @@ const { items, finishedItems } = storeToRefs(list)
 
 const newItem = ref('')
 const newItemTextField = ref(null)
-const editItemTextField = ref([])
 
 const rules = {
-  required: (value) => {
-    return Boolean(value) || '欄位必填'
-  },
-  length: (value) => {
-    return value.length >= 3 || '必須三個字以上'
-  }
+  required: value => Boolean(value) || 'Field required',
+  length: value => value.length >= 3 || 'Must be more than three words'
 }
 
 const onInputSubmit = async () => {
   const validate = await newItemTextField.value.validate()
-  console.log(validate)
   if (validate.length > 0) return
   addItem(newItem.value)
   newItemTextField.value.reset()
 }
 
-const onEditInputSubmit = async (id, i) => {
-  const validate = await editItemTextField.value[i].validate()
-  if (validate.length > 0) return
+const onEditInputSubmit = async id => {
   confirmEditItem(id)
 }
+
+const tableHeaders = [
+  { text: 'Name', value: 'name' },
+  { text: 'Operate', value: 'operate', sortable: false }
+]
+
+const finishedTableHeaders = [
+  { text: 'Name', value: 'name' },
+  { text: 'Operate', value: 'operate', sortable: false }
+]
 </script>
+
 <style scoped>
-.v-container {
-  background-color: #D0D0D0;
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, sans-serif;
 }
 
-.v-text-field {
-  color: #D3A4FF;
+.background {
+  background: url(../assets/bgtomato4.jpg);
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-h1, h2 {
-  color: #2894FF;
+.v-card {
+  background: rgba(233, 137, 13, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.v-btn {
+  color: #ff5722;
 }
 </style>
